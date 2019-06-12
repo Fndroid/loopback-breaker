@@ -9,19 +9,19 @@ import (
 
 func enableLoopback(appIDs []string) {
 	for _, id := range appIDs {
-		go func(id string) {
-			cmd := exec.Command("CheckNetIsolation", "loopbackexempt", "-a", "-p=" + id)
-			err := cmd.Run()
-			if err != nil {
-				log.Printf("Cmd exec failed: %s", err)
-			}
-		}(id)
+		cmd := exec.Command("CheckNetIsolation", "loopbackexempt", "-a", "-p=" + id)
+		err := cmd.Run()
+		if err != nil {
+			log.Printf("Cmd exec failed: %s", err)
+		}
 	}
 }
 
 func main() {
 
-	rate := time.Second * 5
+	log.Printf("Loopback Breaker is running...")
+
+	rate := time.Second * 2
 
 	ticker := time.Tick(rate)
 
@@ -48,7 +48,7 @@ func main() {
 			log.Printf("%s", err)
 		}
 	
-		enableLoopback(appIDs)
+		go enableLoopback(appIDs)
 
 	}
 
